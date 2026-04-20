@@ -19,3 +19,24 @@ export async function createTransaction(transaction: ITransaction) {
         throw error;
     }
 }
+
+export async function deleteTransaction(id: string | number) {
+  try {
+    const response = await api.delete(`/transactions/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error deleting transaction:", error);
+    throw error;
+  }
+}
+
+export async function updateTransaction(transaction: ITransaction) {
+  try {
+    // Assume-se que a interface ITransaction tem a propriedade 'id'
+    const response = await api.put<ITransaction>(`/transactions/${transaction.id}`, transaction);
+    return response.data;
+  } catch (error) {
+    console.error("Error updating transaction:", error);
+    throw error;
+  }
+}

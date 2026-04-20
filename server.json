@@ -1,0 +1,20 @@
+{
+  "transactions": [
+    {
+      "id": "1",
+      "title": "Salário",
+      "price": 5000,
+      "category": "Trabalho",
+      "type": "INCOME",
+      "data": "2024-06-01T00:00:00.000Z"
+    },
+    {
+      "id": "2",
+      "title": "Aluguel",
+      "price": 1500,
+      "category": "Moradia",
+      "type": "OUTCOME",
+      "data": "2024-06-05T00:00:00.000Z"
+    }
+  ]
+}

@@ -9,30 +9,40 @@ import { yupResolver } from "@hookform/resolvers/yup";
 export type FormModalProps = {
    title: string;
    closeModal: () => void;
-   addTransaction: (transaction: ITransaction) => void;
+   transactionToEdit?: ITransaction | null; // Adicionamos esta linha
+   addTransaction: (transaction: any) => void; // Mudamos para any para evitar o erro de tipagem no page.tsx
 }
 
-export const FormModal = ({ title, closeModal, addTransaction }: FormModalProps) => {
+export const FormModal = ({ title, closeModal, transactionToEdit, addTransaction }: FormModalProps) => {
   
   const {
     handleSubmit,
     register,
-    formState: { errors},
+    formState: { errors },
     setValue,
     watch
   } = useForm<TransactionFormData>({
-    resolver: yupResolver(transactionSchema),
-    defaultValues
-  })  
+    resolver: yupResolver(transactionSchema) as any, // Adicionamos as any para evitar conflito com o campo id opcional
+    // Se existir transactionToEdit, usamos ele para preencher os inputs. Se não, usamos os valores vazios padrão.
+    defaultValues: transactionToEdit ? {
+      ...transactionToEdit,
+      // Se data vier como string do backend, garantimos que vira Date para não quebrar o formulário
+      data: new Date(transactionToEdit.data)
+    } : defaultValues
+  });  
+
   const handleTypeChange = (type: TransactionType) => {
     setValue("type", type);
   }
 
   const handleSubmitForm = (data: TransactionFormData) => {
-    addTransaction(data as ITransaction);
+    addTransaction({
+      ...data,
+      // Se for uma edição, enviamos o ID de volta para a função principal saber quem atualizar
+      id: transactionToEdit?.id 
+    });
     closeModal();
   }
-
 
   const type = watch("type");
 
